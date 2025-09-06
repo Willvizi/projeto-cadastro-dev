@@ -6,7 +6,10 @@ export class desenvolvedor {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @ManyToOne(() => nivel, nivel => nivel.id)
+    @Column()
+    nivel_id!: number;
+
+    @ManyToOne(() => nivel)
     @JoinColumn({ name: "nivel_id" })
     nivel!: nivel;
 
