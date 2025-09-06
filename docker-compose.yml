@@ -20,7 +20,7 @@ services:
     ports:
       - "5050:80"
 
-app:
+  app:
     build: .
     container_name: cadastro_dev_app
     ports:
@@ -33,7 +33,6 @@ app:
       DB_USER: postgres
       DB_PASSWORD: 7KTu)%7
       DB_NAME: postgres
-    volumes:
-      - .:/usr/src/app
+
 volumes:
   postgres_data:
