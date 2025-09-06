@@ -26,4 +26,13 @@ export class DesenvolvedoresService {
             relations: ['nivel']
         });
     }
+
+    async update(id: number, desenvolvedorData: any) {
+        await this.desenvolvedoresRepository.update(id, desenvolvedorData);
+        return this.findById(id);
+    }
+
+    async deleteById(id: number) {
+        await this.desenvolvedoresRepository.delete(id);
+    }
 }
