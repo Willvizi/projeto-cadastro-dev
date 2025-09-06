@@ -21,7 +21,9 @@ services:
       - "5050:80"
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: cadastro_dev_app
     ports:
       - "3000:3000"
