@@ -7,8 +7,8 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || '7KTu)%7',
   database: process.env.DB_NAME || 'postgres',
-  entities: [],
-  synchronize: true,
+  entities: [__dirname + '/entities/*.ts'],
+  synchronize: false
 });
 
 export default AppDataSource;
