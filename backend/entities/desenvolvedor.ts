@@ -1,4 +1,4 @@
-import {PrimaryGeneratedColumn, Entity, Column, ManyToMany, ManyToOne, JoinColumn} from "typeorm";
+import {PrimaryGeneratedColumn, Entity, Column, ManyToOne, JoinColumn} from "typeorm";
 import { nivel } from "./nivel";
 
 @Entity("desenvolvedor")

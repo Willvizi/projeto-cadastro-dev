@@ -1,11 +1,15 @@
 import "reflect-metadata";
 import express, { Request, Response } from "express";
 import AppDataSource from "./utils/data-source";
+import { desenvolvedoresRoutes } from "./routes/desenvolvedores.routes";
 
 const app = express();
 const PORT = 3000;
 
+app.use(express.json());
+
 app.get("/", (req: Request, res: Response) => res.send("Teste Will!"));
+app.use(desenvolvedoresRoutes);
 app.listen(PORT, () => console.log(`Rodando na porta ${PORT}!`));
 
 AppDataSource.initialize()
