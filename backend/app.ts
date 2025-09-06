@@ -2,15 +2,16 @@ import "reflect-metadata";
 import express, { Request, Response } from "express";
 import AppDataSource from "./utils/data-source";
 import { desenvolvedoresRoutes } from "./routes/desenvolvedores.routes";
+import { niveisRoutes } from "./routes/niveis.routes";
 
 const app = express();
-const PORT = 3000;
 
 app.use(express.json());
 
-app.get("/", (req: Request, res: Response) => res.send("Teste Will!"));
 app.use("/api/desenvolvedores", desenvolvedoresRoutes);
-app.listen(PORT, () => console.log(`Rodando na porta ${PORT}!`));
+app.use("/api/niveis", niveisRoutes);
+
+app.listen(3000, () => console.log(`Rodando na porta 3000!`));
 
 AppDataSource.initialize()
   .then(() => {
