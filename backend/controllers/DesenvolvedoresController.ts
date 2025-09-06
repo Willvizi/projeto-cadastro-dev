@@ -5,7 +5,11 @@ export class DesenvolvedoresController {
 
     private desenvolvedoresService = new DesenvolvedoresService();
 
-    async create(req: Request, res: Response) {
+    constructor() {
+        this.desenvolvedoresService = new DesenvolvedoresService();
+    }
+
+    create = async (req: Request, res: Response) => {
         try {
             const desenvolvedor = await this.desenvolvedoresService.create(req.body);
             res.status(201).json({

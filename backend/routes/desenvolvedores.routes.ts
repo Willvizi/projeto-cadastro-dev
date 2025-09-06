@@ -4,6 +4,6 @@ import { DesenvolvedoresController } from "../controllers/DesenvolvedoresControl
 const router = Router();
 const desenvolvedoresController = new DesenvolvedoresController();
 
-router.post("/desenvolvedores", desenvolvedoresController.create);
+router.post("/", desenvolvedoresController.create);
 
 export { router as desenvolvedoresRoutes };
