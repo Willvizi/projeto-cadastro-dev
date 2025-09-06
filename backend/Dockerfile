@@ -8,9 +8,10 @@ COPY package*.json ./
 COPY pnpm-lock.yaml ./
 
 RUN pnpm install
+RUN pnpm add -D typescript ts-node @types/node
 
 COPY . .
 
 EXPOSE 3000
 
-CMD ["node", "app.js"]
+CMD ["npx", "ts-node", "app.ts"]
