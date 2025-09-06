@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { NiveisService } from "../services/niveis.service";
+import { obtemParametorsDePaginacao, criaRespostaPaginada } from "../utils/paginacao";
 
 export class NiveisController {
     private niveisService: NiveisService;
@@ -17,8 +18,11 @@ export class NiveisController {
     }
     findAll = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const niveis = await this.niveisService.findAll();
-            res.status(200).json(niveis);
+            const { page, limit, offset } = obtemParametorsDePaginacao(req);
+            const result = await this.niveisService.findAll(limit, offset);
+            const response = criaRespostaPaginada(result.niveis, result.total, page, limit);
+
+            res.status(200).json(response);
         } catch (error) {
             next(error);
         }

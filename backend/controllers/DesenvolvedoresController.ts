@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { DesenvolvedoresService } from "../services/desenvolvedores.service";
+import { obtemParametorsDePaginacao, criaRespostaPaginada } from "../utils/paginacao";
 
 export class DesenvolvedoresController {
 
@@ -18,10 +19,11 @@ export class DesenvolvedoresController {
 
     findAll = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const desenvolvedores = await this.desenvolvedoresService.findAll();
-            res.status(200).json({
-                data: desenvolvedores
-            });
+            const { page, limit, offset } = obtemParametorsDePaginacao(req);
+            const result = await this.desenvolvedoresService.findAll(limit, offset);
+            const response = criaRespostaPaginada(result.desenvolvedores, result.total, page, limit);
+
+            res.status(200).json(response);
         } catch (error) {
             next(error);
         }

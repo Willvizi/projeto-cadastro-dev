@@ -15,9 +15,22 @@ export class NiveisService {
         });
     }
 
-    async findAll() {
-        return await this.niveisRepository.find();
-    }
+    async findAll(limit?: number, offset?: number) {
+    const whereClause = {};
+    
+    const [niveis, total] = await Promise.all([
+        this.niveisRepository.find({
+            take: limit,
+            skip: offset,
+        }),
+        this.niveisRepository.count(whereClause)
+    ]);
+
+    return {
+        niveis,
+        total
+    };
+}
 
     async findById(id: number) {
         return await this.niveisRepository.findOne({

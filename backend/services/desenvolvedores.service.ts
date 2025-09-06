@@ -16,8 +16,17 @@ export class DesenvolvedoresService {
         });
     }
 
-    async findAll() {
-        return await this.desenvolvedoresRepository.find({ relations: ['nivel'] });
+    async findAll(limit?: number, offset?: number) {
+        const [desenvolvedores, total] = await this.desenvolvedoresRepository.findAndCount({
+            relations: ['nivel'],
+            take: limit,
+            skip: offset
+        });
+        
+        return {
+            desenvolvedores,
+            total
+        };
     }
 
     async findById(id: number) {
