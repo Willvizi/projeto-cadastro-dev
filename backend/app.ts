@@ -3,9 +3,10 @@ import express, { Request, Response } from "express";
 import AppDataSource from "./utils/data-source";
 import { desenvolvedoresRoutes } from "./routes/desenvolvedores.routes";
 import { niveisRoutes } from "./routes/niveis.routes";
+import cors from "cors";
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
 app.use("/api/desenvolvedores", desenvolvedoresRoutes);
