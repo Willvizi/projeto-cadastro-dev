@@ -36,5 +36,18 @@ services:
       DB_PASSWORD: 7KTu)%7
       DB_NAME: postgres
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cadastro_dev_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:3000
+
 volumes:
   postgres_data:
