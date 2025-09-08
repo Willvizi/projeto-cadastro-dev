@@ -18,9 +18,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import { toast } from 'react-toastify';
-import axios from 'axios';
 import { useDesenvolvedores } from './useDesenvolvedor';
+import { useNiveis } from './useNiveis';
 import ConfirmarExclusao from './ConfirmarExclusao';
 import ModalEdicaoDesenvolvedor from './ModalEdicaoDesenvolvedor';
 import ModalCadastroDesenvolvedor from './ModalCadastroDesenvolvedor';
@@ -31,30 +30,14 @@ const formatarData = (data) => {
 };
 
 const ListaDesenvolvedores = () => {
-    const { loading, handleExcluir, handleEditar, handleCriar } = useDesenvolvedores();
+    const { dados, loading, meta, handleExcluir, handleEditar, handleCriar, carregarDesenvolvedores } = useDesenvolvedores();
+    const { niveis, loading: carregandoNiveis } = useNiveis();
 
-    const [niveis, setNiveis] = useState([]);
-    const [carregandoNiveis, setCarregandoNiveis] = useState(false);
-    const [todosDesenvolvedores, setTodosDesenvolvedores] = useState([]);
     const [dialogConfirm, setDialogConfirm] = useState({ open: false, id: null, nome: '' });
-    const [paginaAtual, setPaginaAtual] = useState(0);
-    const [linhasPorPagina, setLinhasPorPagina] = useState(10);
-    const [ordenarPor, setOrdenarPor] = useState('');
-    const [direcaoOrdem, setDirecaoOrdem] = useState('asc');
     const [modalEdicao, setModalEdicao] = useState({ open: false, desenvolvedor: null });
     const [modalCadastro, setModalCadastro] = useState({ open: false });
-
-    React.useEffect(() => {
-        const carregarTodosDesenvolvedores = async () => {
-            try {
-                const response = await axios.get('http://localhost:3000/api/desenvolvedores?limit=1000');
-                setTodosDesenvolvedores(response.data.data || response.data);
-            } catch (error) {
-                console.error('Erro ao carregar todos os desenvolvedores:', error);
-            }
-        };
-        carregarTodosDesenvolvedores();
-    }, []);
+    const [ordenarPor, setOrdenarPor] = useState('');
+    const [direcaoOrdem, setDirecaoOrdem] = useState('asc');
 
     const sortData = (data, orderBy, order) => {
         if (!orderBy) return data;
@@ -93,33 +76,9 @@ const ListaDesenvolvedores = () => {
         const isAsc = ordenarPor === property && direcaoOrdem === 'asc';
         setDirecaoOrdem(isAsc ? 'desc' : 'asc');
         setOrdenarPor(property);
-        setPaginaAtual(0);
     };
 
-    const sortedData = sortData(todosDesenvolvedores, ordenarPor, direcaoOrdem);
-    const paginatedData = sortedData.slice(paginaAtual * linhasPorPagina, paginaAtual * linhasPorPagina + linhasPorPagina);
-
-    const handleChangePage = (event, newPage) => {
-        setPaginaAtual(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event) => {
-        const newRowsPerPage = parseInt(event.target.value, 10);
-        setLinhasPorPagina(newRowsPerPage);
-        setPaginaAtual(0);
-    };
-
-    const carregarNiveis = async () => {
-        try {
-            setCarregandoNiveis(true);
-            const response = await axios.get('http://localhost:3000/api/niveis?limit=1000');
-            setNiveis(response.data.data || response.data);
-        } catch {
-            toast.error('Erro ao carregar níveis');
-        } finally {
-            setCarregandoNiveis(false);
-        }
-    };
+    const dadosOrdenados = sortData(dados, ordenarPor, direcaoOrdem);
 
     const abrirConfirmacao = (id, nome) => {
         setDialogConfirm({
@@ -138,18 +97,11 @@ const ListaDesenvolvedores = () => {
     };
 
     const confirmarExclusao = async () => {
-        await handleExcluir(dialogConfirm.id, paginaAtual + 1, linhasPorPagina);
-        try {
-            const response = await axios.get('http://localhost:3000/api/desenvolvedores?limit=1000');
-            setTodosDesenvolvedores(response.data.data || response.data);
-        } catch (error) {
-            console.error('Erro ao recarregar desenvolvedores:', error);
-        }
+        await handleExcluir(dialogConfirm.id, meta.current_page, meta.per_page);
         fecharConfirmacao();
     };
 
     const abrirModalEdicao = (desenvolvedor) => {
-        carregarNiveis();
         setModalEdicao({
             open: true,
             desenvolvedor: desenvolvedor
@@ -164,7 +116,6 @@ const ListaDesenvolvedores = () => {
     };
 
     const abrirModalCadastro = () => {
-        carregarNiveis();
         setModalCadastro({
             open: true
         });
@@ -177,14 +128,8 @@ const ListaDesenvolvedores = () => {
     };
 
     const handleEditarComPaginacao = async (id, dadosAtualizados) => {
-        const resultado = await handleEditar(id, dadosAtualizados, paginaAtual + 1, linhasPorPagina);
+        const resultado = await handleEditar(id, dadosAtualizados, meta.current_page, meta.per_page);
         if (resultado) {
-            try {
-                const response = await axios.get('http://localhost:3000/api/desenvolvedores?limit=1000');
-                setTodosDesenvolvedores(response.data.data || response.data);
-            } catch (error) {
-                console.error('Erro ao recarregar desenvolvedores:', error);
-            }
             fecharModalEdicao();
         }
         return resultado;
@@ -193,12 +138,6 @@ const ListaDesenvolvedores = () => {
     const handleCadastrarComPaginacao = async (dadosDesenvolvedor) => {
         const resultado = await handleCriar(dadosDesenvolvedor);
         if (resultado) {
-            try {
-                const response = await axios.get('http://localhost:3000/api/desenvolvedores?limit=1000');
-                setTodosDesenvolvedores(response.data.data || response.data);
-            } catch (error) {
-                console.error('Erro ao recarregar desenvolvedores:', error);
-            }
             fecharModalCadastro();
         }
         return resultado;
@@ -264,10 +203,11 @@ const ListaDesenvolvedores = () => {
                             </TableCell>
                             <TableCell>
                                 <Box
-                                    style={{
+                                    sx={{
                                         display: 'flex',
                                         alignItems: 'center',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04)' }
                                     }}
                                     onClick={() => handleRequestSort('nivel')}
                                 >
@@ -282,7 +222,7 @@ const ListaDesenvolvedores = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {paginatedData.map((item) => (
+                        {dadosOrdenados.map((item) => (
                             <TableRow key={item.id}>
                                 <TableCell component="th" scope="row">
                                     {item.nome}
@@ -346,11 +286,14 @@ const ListaDesenvolvedores = () => {
             <TablePagination
                 rowsPerPageOptions={[5, 10, 25, 50]}
                 component="div"
-                count={sortedData.length}
-                rowsPerPage={linhasPorPagina}
-                page={paginaAtual}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
+                count={meta.total}
+                rowsPerPage={meta.per_page}
+                page={meta.current_page - 1}
+                onPageChange={(event, newPage) => carregarDesenvolvedores(newPage + 1, meta.per_page)}
+                onRowsPerPageChange={(event) => {
+                    const newRowsPerPage = parseInt(event.target.value, 10);
+                    carregarDesenvolvedores(1, newRowsPerPage);
+                }}
             />
         </Paper>
     );
