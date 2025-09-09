@@ -44,7 +44,6 @@ export const useNiveis = () => {
             }
         } catch (error) {
             setError(error.message);
-            toast.error('Erro ao carregar níveis');
         } finally {
             setLoading(false);
         }
