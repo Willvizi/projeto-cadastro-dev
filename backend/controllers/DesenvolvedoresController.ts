@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { DesenvolvedoresService } from "../services/desenvolvedores.service";
+import { DesenvolvedoresService } from "../services/desenvolvedoresService";
 import { obtemParametorsDePaginacao, criaRespostaPaginada } from "../utils/paginacao";
 
 export class DesenvolvedoresController {

@@ -7,12 +7,41 @@ export const useNiveis = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [confirmDelete, setConfirmDelete] = useState({ open: false, id: null });
+    const [meta, setMeta] = useState({
+        current_page: 1,
+        per_page: 10,
+        total: 0,
+        last_page: 1
+    });
 
-    const carregarNiveis = async () => {
+    const handleBackendError = (error, defaultMessage) => {
+        if (error.response?.data?.details) {
+            const errorsByField = {};
+            error.response.data.details.forEach(detail => {
+                if (!errorsByField[detail.field]) {
+                    errorsByField[detail.field] = [];
+                }
+                errorsByField[detail.field].push(detail.message);
+            });
+            Object.keys(errorsByField).forEach(field => {
+                const messages = errorsByField[field].join('; ');
+                toast.error(messages);
+            });
+        } else if (error.response?.data?.error) {
+            toast.error(error.response.data.error);
+        } else {
+            toast.error(defaultMessage);
+        }
+    };
+
+    const carregarNiveis = async (page = 1, perPage = 10) => {
         try {
             setLoading(true);
-            const response = await axios.get('http://localhost:3000/api/niveis');
+            const response = await axios.get(`http://localhost:3000/api/niveis?page=${page}&limit=${perPage}`);
             setNiveis(response.data.data || response.data);
+            if (response.data.meta) {
+                setMeta(response.data.meta);
+            }
         } catch (error) {
             setError(error.message);
             toast.error('Erro ao carregar níveis');
@@ -25,19 +54,19 @@ export const useNiveis = () => {
         try {
             await axios.delete(`http://localhost:3000/api/niveis/${id}`);
             toast.success('Nível deletado com sucesso');
-            carregarNiveis();
-        } catch {
-            toast.error('Erro ao deletar nível');
+            carregarNiveis(meta.current_page, meta.per_page);
+        } catch (error) {
+            handleBackendError(error, 'Erro ao deletar nível');
         }
     };
 
     const editarNivel = async (id, dados) => {
         try {
-            await axios.put(`http://localhost:3000/api/niveis/${id}`, dados);
+            await axios.patch(`http://localhost:3000/api/niveis/${id}`, dados);
             toast.success('Nível editado com sucesso');
-            carregarNiveis();
-        } catch {
-            toast.error('Erro ao editar nível');
+            carregarNiveis(meta.current_page, meta.per_page);
+        } catch (error) {
+            handleBackendError(error, 'Erro ao editar nível');
         }
     };
 
@@ -45,9 +74,9 @@ export const useNiveis = () => {
         try {
             await axios.post('http://localhost:3000/api/niveis', dados);
             toast.success('Nível adicionado com sucesso');
-            carregarNiveis();
-        } catch {
-            toast.error('Erro ao adicionar nível');
+            carregarNiveis(meta.current_page, meta.per_page);
+        } catch (error) {
+            handleBackendError(error, 'Erro ao adicionar nivel');
         }
     };
 
@@ -59,9 +88,9 @@ export const useNiveis = () => {
         try {
             await axios.delete(`http://localhost:3000/api/niveis/${confirmDelete.id}`);
             toast.success('Nível deletado com sucesso');
-            carregarNiveis();
-        } catch {
-            toast.error('Erro ao deletar nível');
+            carregarNiveis(meta.current_page, meta.per_page);
+        } catch (error) {
+            handleBackendError(error, 'Erro ao deletar nivel');
         } finally {
             setConfirmDelete({ open: false, id: null });
         }
@@ -79,6 +108,7 @@ export const useNiveis = () => {
         niveis,
         loading,
         error,
+        meta,
         carregarNiveis,
         deletarNivel,
         handleDeletarNivel,

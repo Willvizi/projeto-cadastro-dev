@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import express, { Request, Response } from "express";
 import AppDataSource from "./utils/data-source";
-import { desenvolvedoresRoutes } from "./routes/desenvolvedores.routes";
-import { niveisRoutes } from "./routes/niveis.routes";
+import { desenvolvedoresRoutes } from "./routes/desenvolvedorRoutes";
+import { niveisRoutes } from "./routes/niveisRoutes";
 import cors from "cors";
 
 const app = express();

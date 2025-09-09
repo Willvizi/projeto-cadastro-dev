@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { NiveisService } from "../services/niveis.service";
+import { NiveisService } from "../services/niveisService";
 import { obtemParametorsDePaginacao, criaRespostaPaginada } from "../utils/paginacao";
 
 export class NiveisController {

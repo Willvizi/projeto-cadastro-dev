@@ -22,6 +22,9 @@ export class NiveisService {
         this.niveisRepository.find({
             take: limit,
             skip: offset,
+            order: {
+                id: 'ASC'
+            }
         }),
         this.niveisRepository.count(whereClause)
     ]);

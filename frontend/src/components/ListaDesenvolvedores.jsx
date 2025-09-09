@@ -16,6 +16,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import SettingsIcon from '@mui/icons-material/Settings';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { useDesenvolvedores } from './useDesenvolvedor';
@@ -23,6 +24,7 @@ import { useNiveis } from './useNiveis';
 import ConfirmarExclusao from './ConfirmarExclusao';
 import ModalEdicaoDesenvolvedor from './ModalEdicaoDesenvolvedor';
 import ModalCadastroDesenvolvedor from './ModalCadastroDesenvolvedor';
+import ModalGerenciarNiveis from './ModalGerenciarNiveis';
 
 const formatarData = (data) => {
     const d = new Date(data);
@@ -31,11 +33,23 @@ const formatarData = (data) => {
 
 const ListaDesenvolvedores = () => {
     const { dados, loading, meta, handleExcluir, handleEditar, handleCriar, carregarDesenvolvedores } = useDesenvolvedores();
-    const { niveis, loading: carregandoNiveis } = useNiveis();
+    const { 
+        niveis, 
+        loading: carregandoNiveis, 
+        meta: metaNiveis,
+        carregarNiveis,
+        handleDeletarNivel,
+        confirmDelete,
+        confirmarDelecao,
+        cancelarDelecao,
+        editarNivel,
+        adicionarNivel
+    } = useNiveis();
 
     const [dialogConfirm, setDialogConfirm] = useState({ open: false, id: null, nome: '' });
     const [modalEdicao, setModalEdicao] = useState({ open: false, desenvolvedor: null });
     const [modalCadastro, setModalCadastro] = useState({ open: false });
+    const [modalNiveis, setModalNiveis] = useState({ open: false });
     const [ordenarPor, setOrdenarPor] = useState('');
     const [direcaoOrdem, setDirecaoOrdem] = useState('asc');
 
@@ -127,6 +141,18 @@ const ListaDesenvolvedores = () => {
         });
     };
 
+    const abrirModalNiveis = () => {
+        setModalNiveis({
+            open: true
+        });
+    };
+
+    const fecharModalNiveis = () => {
+        setModalNiveis({
+            open: false
+        });
+    };
+
     const handleEditarComPaginacao = async (id, dadosAtualizados) => {
         const resultado = await handleEditar(id, dadosAtualizados, meta.current_page, meta.per_page);
         if (resultado) {
@@ -153,12 +179,21 @@ const ListaDesenvolvedores = () => {
                 Desenvolvedores
             </Typography>
 
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    startIcon={<SettingsIcon />}
+                    onClick={abrirModalNiveis}
+                >
+                    Gerenciar Níveis
+                </Button>
                 <Button
                     variant="contained"
                     color="primary"
                     startIcon={<AddIcon />}
                     onClick={abrirModalCadastro}
+                    disabled={niveis.length === 0}
                 >
                     Novo Desenvolvedor
                 </Button>
@@ -281,6 +316,21 @@ const ListaDesenvolvedores = () => {
                 onSave={handleCadastrarComPaginacao}
                 niveis={niveis}
                 loadingNiveis={carregandoNiveis}
+            />
+
+            <ModalGerenciarNiveis
+                open={modalNiveis.open}
+                onClose={fecharModalNiveis}
+                niveis={niveis}
+                loading={carregandoNiveis}
+                meta={metaNiveis}
+                carregarNiveis={carregarNiveis}
+                handleDeletarNivel={handleDeletarNivel}
+                confirmDelete={confirmDelete}
+                confirmarDelecao={confirmarDelecao}
+                cancelarDelecao={cancelarDelecao}
+                editarNivel={editarNivel}
+                adicionarNivel={adicionarNivel}
             />
 
             <TablePagination
