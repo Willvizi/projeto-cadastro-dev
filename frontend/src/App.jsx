@@ -1,5 +1,5 @@
 import './App.css'
-import ListaDesenvolvedores from './components/ListaDesenvolvedores'
+import ListaDesenvolvedores from './components/desenvolvedores/ListaDesenvolvedores'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

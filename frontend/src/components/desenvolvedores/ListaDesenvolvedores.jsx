@@ -20,12 +20,12 @@ import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import { useDesenvolvedores } from './useDesenvolvedor';
-import { useNiveis } from './useNiveis';
-import ConfirmarExclusao from './ConfirmarExclusao';
+import { useDesenvolvedores } from '../../hooks/useDesenvolvedor';
+import { useNiveis } from '../../hooks/useNiveis';
+import ConfirmarExclusao from '../util/ConfirmarExclusao';
 import ModalEdicaoDesenvolvedor from './ModalEdicaoDesenvolvedor';
 import ModalCadastroDesenvolvedor from './ModalCadastroDesenvolvedor';
-import ModalGerenciarNiveis from './ModalGerenciarNiveis';
+import ModalGerenciarNiveis from '../niveis/ModalGerenciarNiveis';
 
 const formatarData = (data) => {
     const d = new Date(data);
