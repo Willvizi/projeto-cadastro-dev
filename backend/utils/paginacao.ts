@@ -2,8 +2,10 @@ export function obtemParametorsDePaginacao(req: any) {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const offset = (page - 1) * limit;
+    const nome = req.query.nome as string || null;
+    const nivel = req.query.nivel as string || null;
     
-    return { page, limit, offset };
+    return { page, limit, offset, nome, nivel };
 }
 
 export function criaRespostaPaginada(data: any[], total: number, page: number, limit: number) {

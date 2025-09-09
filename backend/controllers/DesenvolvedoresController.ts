@@ -19,8 +19,8 @@ export class DesenvolvedoresController {
 
     findAll = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { page, limit, offset } = obtemParametorsDePaginacao(req);
-            const result = await this.desenvolvedoresService.findAll(limit, offset);
+            const { page, limit, offset, nome } = obtemParametorsDePaginacao(req);
+            const result = await this.desenvolvedoresService.findAll(limit, offset, nome);
             const response = criaRespostaPaginada(result.desenvolvedores, result.total, page, limit);
 
             res.status(200).json(response);

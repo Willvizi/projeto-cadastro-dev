@@ -1,5 +1,6 @@
 import AppDataSource from "../utils/data-source";
 import { desenvolvedor } from "../entities/desenvolvedor";
+import { ILike } from "typeorm";
 
 export class DesenvolvedoresService {
     private desenvolvedoresRepository = AppDataSource.getRepository(desenvolvedor);
@@ -16,8 +17,15 @@ export class DesenvolvedoresService {
         });
     }
 
-    async findAll(limit?: number, offset?: number) {
+    async findAll(limit?: number, offset?: number, nome?: string | null) {
+        const whereCondition: any = {};
+        
+        if (nome) {
+            whereCondition.nome = ILike(`%${nome}%`);
+        }
+
         const [desenvolvedores, total] = await this.desenvolvedoresRepository.findAndCount({
+            where: Object.keys(whereCondition).length > 0 ? whereCondition : undefined,
             relations: ['nivel'],
             take: limit,
             skip: offset

@@ -11,7 +11,8 @@ import {
     TableRow, 
     Button, 
     Box,
-    TablePagination
+    TablePagination,
+    TextField
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -52,6 +53,7 @@ const ListaDesenvolvedores = () => {
     const [modalNiveis, setModalNiveis] = useState({ open: false });
     const [ordenarPor, setOrdenarPor] = useState('');
     const [direcaoOrdem, setDirecaoOrdem] = useState('asc');
+    const [termoPesquisa, setTermoPesquisa] = useState('');
 
     const sortData = (data, orderBy, order) => {
         if (!orderBy) return data;
@@ -93,6 +95,16 @@ const ListaDesenvolvedores = () => {
     };
 
     const dadosOrdenados = sortData(dados, ordenarPor, direcaoOrdem);
+
+    const handlePesquisar = () => {
+        carregarDesenvolvedores(1, meta.per_page, termoPesquisa);
+    };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handlePesquisar();
+        }
+    };
 
     const abrirConfirmacao = (id, nome) => {
         setDialogConfirm({
@@ -197,6 +209,18 @@ const ListaDesenvolvedores = () => {
                 >
                     Novo Desenvolvedor
                 </Button>
+            </Box>
+
+            <Box sx={{ mb: 2 }}>
+                <TextField
+                    fullWidth
+                    label="Pesquisar por nome"
+                    placeholder="Digite o nome do desenvolvedor"
+                    value={termoPesquisa}
+                    onChange={(e) => setTermoPesquisa(e.target.value)}
+                    onKeyDown={handleKeyPress}
+                    sx={{ mb: 2 }}
+                />
             </Box>
 
             <TableContainer component={Paper}>

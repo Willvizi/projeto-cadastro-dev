@@ -18,8 +18,8 @@ export class NiveisController {
     }
     findAll = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { page, limit, offset } = obtemParametorsDePaginacao(req);
-            const result = await this.niveisService.findAll(limit, offset);
+            const { page, limit, offset, nivel } = obtemParametorsDePaginacao(req);
+            const result = await this.niveisService.findAll(limit, offset, nivel || undefined);
             const response = criaRespostaPaginada(result.niveis, result.total, page, limit);
 
             res.status(200).json(response);

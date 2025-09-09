@@ -20,10 +20,10 @@ export const useDesenvolvedores = () => {
         return error.response?.data?.error || error.message || 'Erro desconhecido';
     };
 
-    const carregarDesenvolvedores = async (page = 1, limit = 10) => {
+    const carregarDesenvolvedores = async (page = 1, limit = 10, nome = '') => {
         try {
             setLoading(true);
-            const response = await axios.get(`http://localhost:3000/api/desenvolvedores?page=${page}&limit=${limit}`);
+            const response = await axios.get(`http://localhost:3000/api/desenvolvedores?page=${page}&limit=${limit}&nome=${nome}`);
             setDados(response.data.data || response.data);
             if (response.data.meta) {
                 setMeta(response.data.meta);

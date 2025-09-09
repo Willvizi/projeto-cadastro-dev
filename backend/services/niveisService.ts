@@ -1,5 +1,6 @@
 import AppDataSource from "../utils/data-source";
 import { nivel } from "../entities/nivel";
+import { ILike } from "typeorm";
 
 export class NiveisService {
     private niveisRepository = AppDataSource.getRepository(nivel);
@@ -15,19 +16,21 @@ export class NiveisService {
         });
     }
 
-    async findAll(limit?: number, offset?: number) {
-    const whereClause = {};
+    async findAll(limit?: number, offset?: number, nivel?: string) {
+    const whereCondition: any = {};
     
-    const [niveis, total] = await Promise.all([
-        this.niveisRepository.find({
-            take: limit,
-            skip: offset,
-            order: {
-                id: 'ASC'
-            }
-        }),
-        this.niveisRepository.count(whereClause)
-    ]);
+    if (nivel) {
+        whereCondition.nivel = ILike(`%${nivel}%`);
+    }
+    
+    const [niveis, total] = await this.niveisRepository.findAndCount({
+        where: Object.keys(whereCondition).length > 0 ? whereCondition : undefined,
+        take: limit,
+        skip: offset,
+        order: {
+            id: 'ASC'
+        }
+    });
 
     return {
         niveis,

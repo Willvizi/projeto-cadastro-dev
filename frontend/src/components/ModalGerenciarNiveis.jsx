@@ -17,7 +17,8 @@ import {
     CircularProgress,
     IconButton,
     Tooltip,
-    TablePagination
+    TablePagination,
+    TextField
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -43,6 +44,7 @@ const ModalGerenciarNiveis = ({
 }) => {
     const [modalCadastro, setModalCadastro] = useState({ open: false });
     const [modalEdicao, setModalEdicao] = useState({ open: false, nivel: null });
+    const [termoPesquisa, setTermoPesquisa] = useState('');
 
     const abrirModalCadastro = () => {
         setModalCadastro({ open: true });
@@ -60,14 +62,26 @@ const ModalGerenciarNiveis = ({
         setModalEdicao({ open: false, nivel: null });
     };
 
+    const handlePesquisar = () => {
+        carregarNiveis(1, meta.per_page, termoPesquisa);
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            handlePesquisar();
+        }
+    };
+
     const handleAdicionarNivel = async (dados) => {
         await adicionarNivel(dados);
         fecharModalCadastro();
+        carregarNiveis(meta.current_page, meta.per_page, termoPesquisa);
     };
 
     const handleEditarNivel = async (id, dados) => {
         await editarNivel(id, dados);
         fecharModalEdicao();
+        carregarNiveis(meta.current_page, meta.per_page, termoPesquisa);
     };
 
     return (
@@ -109,6 +123,18 @@ const ModalGerenciarNiveis = ({
                         >
                             Novo Nível
                         </Button>
+                    </Box>
+
+                    <Box sx={{ mb: 2 }}>
+                        <TextField
+                            fullWidth
+                            label="Pesquisar por nível"
+                            placeholder="Digite o nome do nível"
+                            value={termoPesquisa}
+                            onChange={(e) => setTermoPesquisa(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            sx={{ mb: 2 }}
+                        />
                     </Box>
 
                     {loading ? (
@@ -188,10 +214,10 @@ const ModalGerenciarNiveis = ({
                                 count={meta.total}
                                 rowsPerPage={meta.per_page}
                                 page={meta.current_page - 1}
-                                onPageChange={(event, newPage) => carregarNiveis(newPage + 1, meta.per_page)}
+                                onPageChange={(event, newPage) => carregarNiveis(newPage + 1, meta.per_page, termoPesquisa)}
                                 onRowsPerPageChange={(event) => {
                                     const newRowsPerPage = parseInt(event.target.value, 10);
-                                    carregarNiveis(1, newRowsPerPage);
+                                    carregarNiveis(1, newRowsPerPage, termoPesquisa);
                                 }}
                                 sx={{ flex: 1 }}
                             />

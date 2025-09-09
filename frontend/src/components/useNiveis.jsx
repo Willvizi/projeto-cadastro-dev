@@ -34,10 +34,10 @@ export const useNiveis = () => {
         }
     };
 
-    const carregarNiveis = async (page = 1, perPage = 10) => {
+    const carregarNiveis = async (page = 1, perPage = 10, nivel = '') => {
         try {
             setLoading(true);
-            const response = await axios.get(`http://localhost:3000/api/niveis?page=${page}&limit=${perPage}`);
+            const response = await axios.get(`http://localhost:3000/api/niveis?page=${page}&limit=${perPage}&nivel=${nivel}`);
             setNiveis(response.data.data || response.data);
             if (response.data.meta) {
                 setMeta(response.data.meta);
