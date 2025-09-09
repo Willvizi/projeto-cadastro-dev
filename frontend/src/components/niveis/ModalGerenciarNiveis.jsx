@@ -24,7 +24,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import ConfirmarExclusao from './ConfirmarExclusao';
+import ConfirmarExclusao from '../util/ConfirmarExclusao';
 import ModalCadastroNivel from './ModalCadastroNivel';
 import ModalEdicaoNivel from './ModalEdicaoNivel';
 
