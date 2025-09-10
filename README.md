@@ -51,7 +51,16 @@ FrontEnd:
 
 ## Endpoints
 
+**Importando a Collection no Postman ou Insomnia**
+>Para ajudar nos testes ja com as requisições
+1. Baixe o arquivo [DesenvolvedoresCadastro.postman_collection.json](./DesenvolvedoresCadastro.postman_collection.json).
+2. Abra o Postman ou Insomnia.
+3. Procure pela opção de importar ("Import" ou "Importar").
+4. Selecione o arquivo baixado e confirme a importação.
+5. Pronto! Os endpoints estarão disponíveis para uso.
+
 ### Desenvolvedores
+
 **Base:** `http://localhost:3000/api/desenvolvedores`
 
 | Método | Endpoint | Descrição |
