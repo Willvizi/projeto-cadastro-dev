@@ -11,7 +11,6 @@ Portas para acesso:
 
 - [Frontend](http://localhost:5173): http://localhost:5173
 - [Backend](http://localhost:3000): http://localhost:3000
-- [pgAdmin](http://localhost:5050): http://localhost:5050
 
 
 > **Possiveis problemas:** 
@@ -47,7 +46,6 @@ FrontEnd:
 - FrontEnd - cadastro_dev_frontend
 - Backend - cadastro_dev_app
 - Banco de dados - cadastro_dev_db
-- Admnistrador de banco - pgadmin
 
 ## Endpoints
 
